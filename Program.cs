@@ -29,7 +29,11 @@ namespace Task_19
                         break;
                     case 3:
                         //удалить
-                        fullName = DeleteDossier(fullName, position);
+                        Console.Write("Введите номер досье : ");
+                        string index = Console.ReadLine();
+
+                        fullName = DeleteDossier(fullName, index);
+                        position = DeleteDossier(position, index);
                         break;
                     case 4:
                         //поиск
@@ -46,60 +50,62 @@ namespace Task_19
             }            
         }
 
-        private static string[] DeleteDossier(string[] fullName, string[] position)
+        private static string[] DeleteDossier(string[] array, string index)
         {
-            string[] tempFullName = new string[fullName.Length - 1];
-            string[] tempPosition = new string[position.Length - 1];
-
-            int indexDossier;
-
-            indexDossier = SearchSurname(fullName, position);
-
-            if (indexDossier > -1)
+            if (array.Length > 0)
             {
-                fullName = DeleteByIndex(fullName, tempFullName, indexDossier);
-                fullName = DeleteByIndex(position, tempPosition, indexDossier);
-            }
+                string[] tempFullName = new string[array.Length - 1];
 
-            return fullName;
+                int indexDossier;
+
+                indexDossier = SearchByIndex(array, index);
+
+                if (indexDossier > -1)
+                {
+                    array = DeleteByIndex(array, tempFullName, indexDossier);
+                }
+            }
+            else
+            {
+                Console.WriteLine("Массив пустой");
+            }            
+            return array;
         }
 
-        private static string[] DeleteByIndex(string[] fullName, string[] tempFullName, int indexDossier)
+        private static string[] DeleteByIndex(string[] array, string[] tempArray, int indexDossier)
         {
             for (int i = 0; i < indexDossier; i++)
             {
-                tempFullName[i] = fullName[i];
+                tempArray[i] = array[i];
             }
-            for (int i = indexDossier; i < tempFullName.Length; i++)
+            for (int i = indexDossier; i < tempArray.Length; i++)
             {
-                tempFullName[i] = fullName[i + 1];
+                tempArray[i] = array[i + 1];
             }
-            fullName = tempFullName;
-            return fullName;
+            array = tempArray;
+            return array;
         }
 
         static void AddFullNameAndPosition(ref string[] fullName, ref string[] position)
         {
-            string[] tempFullName = new string[fullName.Length + 1];
-            string[] tempPosition = new string[position.Length + 1];
+            fullName = AddDossier(fullName, "Введите фио : ");
+            position = AddDossier(position, "Введите должность : ");
+            
+            Console.WriteLine();
+        }
+
+        private static string[] AddDossier(string[] fullName, string text)
+        {
+            string[] tempArray = new string[fullName.Length + 1];
 
             for (int i = 0; i < fullName.Length; i++)
             {
-                tempFullName[i] = fullName[i];
+                tempArray[i] = fullName[i];
             }
-            for (int i = 0; i < position.Length; i++)
-            {
-                tempPosition[i] = position[i];
-            }
-            Console.Write("Введите фио : ");
-            tempFullName[fullName.Length +1] = Console.ReadLine();
-            fullName = tempFullName;
-
-            Console.Write("Введите должность : ");
-            tempPosition[position.Length +1] = Console.ReadLine();
-            position = tempPosition;
-
-            Console.WriteLine();
+            Console.Write(text);
+            tempArray[fullName.Length] = Console.ReadLine();
+            fullName = tempArray;
+            return fullName;
         }
 
         static void OutputFullNameAndPosition(string[] fullName, string[] position)
@@ -121,6 +127,7 @@ namespace Task_19
         {
             string surname;
             bool surnameIsFind = false;
+
             Console.Write("Введите фамилию : ");
             surname = Console.ReadLine();
 
@@ -132,12 +139,32 @@ namespace Task_19
                     value = i;
                     surnameIsFind = true;
                     return value;
-                }                
+                }
             }
             if (surnameIsFind == false)
             {
                 Console.WriteLine("Фамилия не найдена");
                 
+            }
+            return value;
+        }
+
+        static int SearchByIndex(string[] array,string index, int value = -1)
+        {            
+            bool IndexIsFind = false;            
+
+            for (int i = 0; i < array.Length; i++)
+            {
+                if (Convert.ToInt32(index) == i)
+                {
+                    value = i;
+                    IndexIsFind = true;
+                    return value;
+                }
+            }
+            if (IndexIsFind == false)
+            {
+                Console.WriteLine("Номер не найден");
             }
             return value;
         }
